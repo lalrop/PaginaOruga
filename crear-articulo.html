@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear Artículo — Oruga37</title>
+
+  <link rel="icon" type="image/png" href="img/logo2.png" />
+  <meta name="theme-color" content="#0D0D0D" />
+  <!-- Evitar que buscadores indexen esta página -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/blog.css" />
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation">
+    <div class="container navbar-inner">
+      <a href="index.html">
+        <img src="img/logo2.png" alt="Oruga37" class="navbar-logo">
+      </a>
+      <ul class="navbar-links" role="list">
+        <li><a href="index.html#blog">← Volver al sitio</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- FORMULARIO -->
+  <section class="crear-page">
+    <div class="container">
+
+      <div class="crear-header">
+        <span class="section-label">Panel de contenido</span>
+        <h1>Enviar <span>Artículo</span></h1>
+        <span class="yellow-line"></span>
+        <p>Completa el formulario con el contenido del artículo y presiona enviar. El mensaje llegará por Telegram con toda la información lista para publicar.</p>
+      </div>
+
+      <form class="crear-form" id="crear-form" novalidate>
+
+        <div class="crear-group">
+          <label for="art-titulo">Título del artículo *</label>
+          <input type="text" id="art-titulo" placeholder="Ej: Cómo preparar tu camioneta para el invierno" required />
+        </div>
+
+        <div class="crear-group">
+          <label for="art-contenido">Contenido del artículo *</label>
+          <textarea id="art-contenido" placeholder="Escribe aquí el texto completo del artículo. Puedes usar saltos de línea para separar párrafos." required></textarea>
+          <p class="crear-note">Tip: separa cada párrafo con una línea en blanco. Puedes indicar subtítulos escribiendo el texto en mayúsculas al inicio de la línea.</p>
+        </div>
+
+        <div class="crear-group">
+          <label for="art-imagen">Imagen del artículo <span style="font-weight:400;opacity:0.6;">(opcional)</span></label>
+          <input type="file" id="art-imagen" accept="image/*" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0.6rem 0.8rem;color:var(--white);font-family:var(--font-body);font-size:0.9rem;cursor:pointer;width:100%;" />
+          <p class="crear-note">Formatos aceptados: JPG, PNG, WEBP. Máximo 10 MB. Se enviará junto al artículo.</p>
+        </div>
+
+        <div id="crear-feedback" style="display:none; margin-bottom:1rem; padding:0.85rem 1rem; border-radius:6px; font-family:var(--font-heading); font-size:0.9rem; font-weight:700; letter-spacing:0.05em;"></div>
+
+        <div class="crear-submit">
+          <button type="submit" class="btn" id="crear-btn" style="background:var(--yellow);color:var(--black);gap:0.5rem;display:inline-flex;align-items:center;">
+            <i class="fa-brands fa-telegram"></i> Enviar</button>
+        </div>
+
+      </form>
+
+    </div>
+  </section>
+
+  <script>
+    // Navbar scroll
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+
+    // Formulario → Telegram
+    const TG_TOKEN   = '8676852850:AAFNEv3KsEVRUeiHMyUUBHffu1zX7QWzSZ0';
+    const TG_CHAT_ID = '6387850982';
+
+    function mostrarFeedback(ok, texto) {
+      const el = document.getElementById('crear-feedback');
+      el.textContent = texto;
+      el.style.display = 'block';
+      el.style.background = ok ? 'rgba(39,174,96,0.15)' : 'rgba(231,76,60,0.15)';
+      el.style.border = ok ? '1px solid rgba(39,174,96,0.4)' : '1px solid rgba(231,76,60,0.4)';
+      el.style.color = ok ? '#2ecc71' : '#e74c3c';
+    }
+
+    document.getElementById('crear-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const titulo    = document.getElementById('art-titulo').value.trim();
+      const contenido = document.getElementById('art-contenido').value.trim();
+      const imagen    = document.getElementById('art-imagen').files[0];
+      const btn       = document.getElementById('crear-btn');
+
+      if (!titulo || !contenido) {
+        mostrarFeedback(false, '⚠ Por favor completa el título y el contenido antes de enviar.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando…';
+
+      const msg = `&lt;Oruga37 articulo&gt;
+
+📝 <b>NUEVO ARTÍCULO PARA EL BLOG</b>\n\n<b>Título:</b> ${titulo}\n\n<b>Contenido:</b>\n${contenido}`;
+
+      try {
+        // 1. Enviar el texto del artículo
+        const resText = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'HTML' })
+        });
+        const dataText = await resText.json();
+
+        if (!dataText.ok) {
+          mostrarFeedback(false, '❌ Error al enviar: ' + (dataText.description || 'Intenta nuevamente.'));
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar a Telegram';
+          return;
+        }
+
+        // 2. Enviar la imagen si se adjuntó una
+        if (imagen) {
+          const formData = new FormData();
+          formData.append('chat_id', TG_CHAT_ID);
+          formData.append('photo', imagen);
+          formData.append('caption', `📸 Imagen para: ${titulo}`);
+          await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          });
+        }
+
+        mostrarFeedback(true, '✅ Artículo enviado correctamente' + (imagen ? ' (con imagen).' : '.'));
+        document.getElementById('crear-form').reset();
+      } catch (err) {
+        mostrarFeedback(false, '❌ Error de conexión. Verifica tu internet e intenta nuevamente.');
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar a Telegram';
+    });
+  </script>
+
+</body>
+</html>

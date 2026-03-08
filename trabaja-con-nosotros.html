@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trabaja con nosotros — Oruga37</title>
+  <link rel="icon" type="image/png" href="img/logo2.png" />
+  <meta name="theme-color" content="#0D0D0D" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .empleo-page { min-height:100vh; padding:6rem 0 5rem; background:var(--dark-1); }
+    .empleo-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+    .empleo-info .section-label { margin-bottom:1rem; }
+    .empleo-info h1 { font-family:var(--font-heading); font-size:clamp(2rem,4vw,3.2rem); font-weight:900; text-transform:uppercase; color:var(--white); line-height:1.05; margin-bottom:1rem; }
+    .empleo-info h1 span { color:var(--yellow); }
+    .empleo-info .yellow-line { margin-bottom:1.5rem; }
+    .empleo-info p { font-size:0.98rem; color:var(--light); line-height:1.85; margin-bottom:1.2rem; }
+    .empleo-valores { margin-top:2rem; display:flex; flex-direction:column; gap:1rem; }
+    .empleo-valor { display:flex; align-items:flex-start; gap:0.9rem; }
+    .empleo-valor i { color:var(--yellow); font-size:1rem; margin-top:0.2rem; flex-shrink:0; }
+    .empleo-valor span { font-size:0.9rem; color:var(--light); line-height:1.6; }
+    .empleo-form-wrap { background:var(--dark-3); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius); padding:2.5rem; }
+    .empleo-form-wrap h2 { font-family:var(--font-heading); font-size:1.1rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--yellow); margin-bottom:1.8rem; }
+    .empleo-group { margin-bottom:1.3rem; }
+    .empleo-group label { display:block; font-family:var(--font-heading); font-size:0.73rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.6); margin-bottom:0.4rem; }
+    .empleo-group input,
+    .empleo-group textarea { width:100%; background:var(--dark-2); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius); padding:0.85rem 1rem; font-family:var(--font-body); font-size:0.95rem; color:var(--white); outline:none; transition:var(--transition); box-sizing:border-box; }
+    .empleo-group input:focus,
+    .empleo-group textarea:focus { border-color:var(--yellow); background:rgba(245,197,24,0.03); }
+    .empleo-group textarea { resize:vertical; min-height:140px; line-height:1.7; }
+    .empleo-group input[type="file"] { cursor:pointer; padding:0.65rem 1rem; font-size:0.88rem; }
+    .empleo-note { font-size:0.78rem; color:rgba(255,255,255,0.3); margin-top:0.3rem; font-style:italic; }
+    .empleo-feedback { display:none; margin-bottom:1rem; padding:0.85rem 1rem; border-radius:6px; font-family:var(--font-heading); font-size:0.88rem; font-weight:700; letter-spacing:0.05em; }
+    .empleo-submit { margin-top:1.8rem; }
+    .empleo-submit .btn { background:var(--yellow); color:var(--black); display:inline-flex; align-items:center; gap:0.5rem; width:100%; justify-content:center; }
+    @media (max-width:900px) { .empleo-grid { grid-template-columns:1fr; gap:3rem; } }
+    @media (max-width:640px) { .empleo-form-wrap { padding:1.5rem; } }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" role="navigation">
+    <div class="container navbar-inner">
+      <a href="index.html"><img src="img/logo2.png" alt="Oruga37" class="navbar-logo"></a>
+      <ul class="navbar-links" role="list">
+        <li><a href="index.html">&larr; Volver al sitio</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="empleo-page">
+    <div class="container">
+      <div class="empleo-grid">
+
+        <div class="empleo-info">
+          <span class="section-label">Únete al equipo</span>
+          <h1>Trabaja con <span>nosotros</span></h1>
+          <span class="yellow-line"></span>
+          <p>En Oruga37 valoramos las manos que saben lo que hacen. Para nosotros, la experiencia real en el taller vale más que cualquier papel: lo que importa es tu capacidad de resolver, adaptar y entregar trabajo del que uno se pueda enorgullecer.</p>
+          <p>Somos un equipo pequeño, comprometido y apasionado por la mecánica off-road y la restauración de vehículos clásicos. Si compartes esa misma pasión, queremos conocerte. No importa si vienes de un taller grande o llevas años trabajando de forma independiente: lo que buscamos es actitud, criterio y oficio.</p>
+          <p>Si crees que tienes lo que se necesita para ser parte de Oruga37, cuéntanos sobre ti. Te responderemos directamente.</p>
+          <div class="empleo-valores">
+            <div class="empleo-valor">
+              <i class="fa-solid fa-wrench"></i>
+              <span><strong>Oficio primero.</strong> La experiencia práctica es tu currículum más importante.</span>
+            </div>
+            <div class="empleo-valor">
+              <i class="fa-solid fa-handshake"></i>
+              <span><strong>Trabajo en equipo.</strong> Nos comunicamos directo y nos apoyamos en cada proyecto.</span>
+            </div>
+            <div class="empleo-valor">
+              <i class="fa-solid fa-star"></i>
+              <span><strong>Calidad sin apuro.</strong> Hacemos las cosas bien o las volvemos a hacer.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="empleo-form-wrap">
+          <h2>Cuéntanos sobre ti</h2>
+          <div class="empleo-feedback" id="empleo-feedback"></div>
+          <form id="empleo-form" novalidate>
+            <div class="empleo-group">
+              <label for="emp-nombre">¿Cuál es tu nombre? *</label>
+              <input type="text" id="emp-nombre" placeholder="Nombre y apellido" required />
+            </div>
+            <div class="empleo-group">
+              <label for="emp-experiencia">Cuéntanos sobre tu experiencia *</label>
+              <textarea id="emp-experiencia" placeholder="¿En qué eres bueno? ¿Con qué vehículos has trabajado? ¿Cuánto tiempo llevas en el rubro?" required></textarea>
+            </div>
+            <div class="empleo-group">
+              <label for="emp-telefono">Teléfono / WhatsApp *</label>
+              <input type="tel" id="emp-telefono" placeholder="+56 9 XXXX XXXX" required />
+            </div>
+            <div class="empleo-group">
+              <label for="emp-correo">Correo <span style="font-weight:400;opacity:0.6;">(opcional)</span></label>
+              <input type="email" id="emp-correo" placeholder="tu@correo.com" />
+            </div>
+            <div class="empleo-group">
+              <label for="emp-cv">Adjunta tu currículum <span style="font-weight:400;opacity:0.6;">(opcional)</span></label>
+              <input type="file" id="emp-cv" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" />
+              <p class="empleo-note">PDF, Word o imagen. Máximo 10 MB.</p>
+            </div>
+            <div class="empleo-submit">
+              <button type="submit" class="btn" id="empleo-btn">
+                <i class="fa-brands fa-telegram"></i> Enviar postulación
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-brand-logo"><img src="img/logo2.png" alt="Oruga37"></div>
+          <p>Taller de mecánica automotriz especializado en transformaciones off-road y restauración de vehículos clásicos. Estación Central, Santiago.</p>
+        </div>
+        <div>
+          <h3 class="footer-h">Navegación</h3>
+          <ul class="footer-links">
+            <li><a href="index.html#servicios">Servicios</a></li>
+            <li><a href="index.html#proyectos">Proyectos</a></li>
+            <li><a href="index.html#nosotros">Nosotros</a></li>
+            <li><a href="index.html#blog">Blog</a></li>
+            <li><a href="index.html#contacto">Contacto</a></li>
+            <li><a href="trabaja-con-nosotros.html">Trabaja con nosotros</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-h">Contacto</h3>
+          <div class="footer-ci"><i class="fa-solid fa-location-dot"></i><span>Pedro Aguirre Cerda 3950, Estación Central</span></div>
+          <div class="footer-ci"><i class="fa-brands fa-whatsapp"></i><a href="https://wa.me/56994365284">+56 9 9436 5284</a></div>
+          <div class="footer-ci"><i class="fa-solid fa-clock"></i><span>Lun &ndash; Vie &middot; 08:00 &ndash; 19:00</span></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="footer-year">2025</span> Oruga37. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="wa-float">
+    <span class="wa-bubble">¡Cuéntanos tu idea!</span>
+    <a href="https://wa.me/56994365284?text=Hola%20Oruga37!" target="_blank" rel="noopener" class="wa-btn" aria-label="Contactar por WhatsApp">
+      <span class="wa-pulse" aria-hidden="true"></span>
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <script>
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
+    const yr = document.getElementById('footer-year');
+    if (yr) yr.textContent = new Date().getFullYear();
+
+    const TG_TOKEN   = '8676852850:AAFNEv3KsEVRUeiHMyUUBHffu1zX7QWzSZ0';
+    const TG_CHAT_ID = '6387850982';
+
+    function mostrarFeedback(ok, texto) {
+      const el = document.getElementById('empleo-feedback');
+      el.textContent = texto;
+      el.style.display = 'block';
+      el.style.background = ok ? 'rgba(39,174,96,0.15)' : 'rgba(231,76,60,0.15)';
+      el.style.border = ok ? '1px solid rgba(39,174,96,0.4)' : '1px solid rgba(231,76,60,0.4)';
+      el.style.color = ok ? '#2ecc71' : '#e74c3c';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.getElementById('empleo-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const nombre      = document.getElementById('emp-nombre').value.trim();
+      const experiencia = document.getElementById('emp-experiencia').value.trim();
+      const telefono    = document.getElementById('emp-telefono').value.trim();
+      const correo      = document.getElementById('emp-correo').value.trim();
+      const cv          = document.getElementById('emp-cv').files[0];
+      const btn         = document.getElementById('empleo-btn');
+
+      if (!nombre || !experiencia || !telefono) {
+        mostrarFeedback(false, 'Por favor completa los campos obligatorios: nombre, experiencia y teléfono.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+
+      let msg = '&lt;Oruga37 empleo&gt;\n\n';
+      msg += '<b>NUEVA POSTULACION</b>\n\n';
+      msg += '<b>Nombre:</b> ' + nombre + '\n';
+      msg += '<b>Telefono:</b> ' + telefono + '\n';
+      if (correo) msg += '<b>Correo:</b> ' + correo + '\n';
+      msg += '\n<b>Experiencia:</b>\n' + experiencia;
+
+      try {
+        const resText = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'HTML' })
+        });
+        const dataText = await resText.json();
+
+        if (!dataText.ok) {
+          mostrarFeedback(false, 'Error al enviar: ' + (dataText.description || 'Intenta nuevamente.'));
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar postulación';
+          return;
+        }
+
+        if (cv) {
+          const formData = new FormData();
+          formData.append('chat_id', TG_CHAT_ID);
+          formData.append('document', cv);
+          formData.append('caption', 'CV de: ' + nombre);
+          await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendDocument', {
+            method: 'POST',
+            body: formData
+          });
+        }
+
+        mostrarFeedback(true, 'Postulación enviada correctamente. Te contactaremos pronto.');
+        document.getElementById('empleo-form').reset();
+      } catch (err) {
+        mostrarFeedback(false, 'Error de conexión. Verifica tu internet e intenta nuevamente.');
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar postulación';
+    });
+  </script>
+
+</body>
+</html>
