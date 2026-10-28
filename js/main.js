@@ -133,6 +133,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  /* ── MEDICIÓN: CLICS EN WHATSAPP (GA4) ─────────── */
+  // Solo registra si Google Analytics (gtag) está instalado en la página.
+  document.querySelectorAll('a[href*="wa.me"]').forEach(link => {
+    link.addEventListener('click', () => {
+      if (typeof gtag !== 'function') return;
+      const section = link.closest('section[id], footer, .wa-float');
+      gtag('event', 'click_whatsapp', {
+        ubicacion: section ? (section.id || section.className) : 'otro'
+      });
+    });
+  });
+
   /* ── AÑO DINÁMICO EN FOOTER ─────────────────────── */
   const yearEl = document.getElementById('footer-year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
