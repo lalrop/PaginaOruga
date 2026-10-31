@@ -44,6 +44,11 @@
       </div>
 
       <form class="crear-form" id="crear-form" novalidate>
+            <!-- Trampa anti-spam: no visible para personas -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+              <label>No llenar <input type="text" name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
 
         <div class="crear-group">
           <label for="art-titulo">Título del artículo *</label>
@@ -80,9 +85,6 @@
     window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
 
     // Formulario → Telegram
-    const TG_TOKEN   = '8676852850:AAFNEv3KsEVRUeiHMyUUBHffu1zX7QWzSZ0';
-    const TG_CHAT_ID = '6387850982';
-
     function mostrarFeedback(ok, texto) {
       const el = document.getElementById('crear-feedback');
       el.textContent = texto;
@@ -90,64 +92,53 @@
       el.style.background = ok ? 'rgba(39,174,96,0.15)' : 'rgba(231,76,60,0.15)';
       el.style.border = ok ? '1px solid rgba(39,174,96,0.4)' : '1px solid rgba(231,76,60,0.4)';
       el.style.color = ok ? '#2ecc71' : '#e74c3c';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    // El envío pasa por /api/enviar (función de Cloudflare); el token del bot
+    // queda guardado como secreto en Cloudflare y nunca llega al navegador.
     document.getElementById('crear-form').addEventListener('submit', async function (e) {
       e.preventDefault();
+      const form = this;
+      const btn  = document.getElementById('crear-btn');
+      const fd   = new FormData();
+      fd.append('tipo', 'articulo');
+      fd.append('titulo', document.getElementById('art-titulo').value.trim());
+      fd.append('contenido', document.getElementById('art-contenido').value.trim());
+      fd.append('sitio_web', form.querySelector('[name="sitio_web"]').value);
+      const archivo = document.getElementById('art-imagen').files[0];
+      if (archivo) {
+        if (archivo.size > 10 * 1024 * 1024) {
+          mostrarFeedback(false, 'El archivo supera los 10 MB.');
+          return;
+        }
+        fd.append('archivo', archivo);
+      }
 
-      const titulo    = document.getElementById('art-titulo').value.trim();
-      const contenido = document.getElementById('art-contenido').value.trim();
-      const imagen    = document.getElementById('art-imagen').files[0];
-      const btn       = document.getElementById('crear-btn');
-
-      if (!titulo || !contenido) {
+      const requeridos = ['titulo', 'contenido'];
+      if (requeridos.some(k => !fd.get(k))) {
         mostrarFeedback(false, '⚠ Por favor completa el título y el contenido antes de enviar.');
         return;
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando…';
-
-      const msg = `&lt;Oruga37 articulo&gt;
-
-📝 <b>NUEVO ARTÍCULO PARA EL BLOG</b>\n\n<b>Título:</b> ${titulo}\n\n<b>Contenido:</b>\n${contenido}`;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
 
       try {
-        // 1. Enviar el texto del artículo
-        const resText = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'HTML' })
-        });
-        const dataText = await resText.json();
-
-        if (!dataText.ok) {
-          mostrarFeedback(false, '❌ Error al enviar: ' + (dataText.description || 'Intenta nuevamente.'));
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar a Telegram';
-          return;
+        const res  = await fetch('/api/enviar', { method: 'POST', body: fd });
+        const data = await res.json().catch(() => ({ ok: false }));
+        if (data.ok) {
+          mostrarFeedback(true, '✅ Artículo enviado correctamente.');
+          form.reset();
+        } else {
+          mostrarFeedback(false, data.mensaje || 'No se pudo enviar. Intenta nuevamente.');
         }
-
-        // 2. Enviar la imagen si se adjuntó una
-        if (imagen) {
-          const formData = new FormData();
-          formData.append('chat_id', TG_CHAT_ID);
-          formData.append('photo', imagen);
-          formData.append('caption', `📸 Imagen para: ${titulo}`);
-          await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
-            method: 'POST',
-            body: formData
-          });
-        }
-
-        mostrarFeedback(true, '✅ Artículo enviado correctamente' + (imagen ? ' (con imagen).' : '.'));
-        document.getElementById('crear-form').reset();
       } catch (err) {
-        mostrarFeedback(false, '❌ Error de conexión. Verifica tu internet e intenta nuevamente.');
+        mostrarFeedback(false, 'Error de conexión. Verifica tu internet e intenta nuevamente.');
       }
 
       btn.disabled = false;
-      btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar a Telegram';
+      btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar';
     });
   </script>
 
