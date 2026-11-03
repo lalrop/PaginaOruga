@@ -93,6 +93,11 @@
           <h2>Cuéntanos sobre ti</h2>
           <div class="empleo-feedback" id="empleo-feedback"></div>
           <form id="empleo-form" novalidate>
+            <!-- Trampa anti-spam: no visible para personas -->
+            <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+              <label>No llenar <input type="text" name="sitio_web" tabindex="-1" autocomplete="off" /></label>
+            </div>
+
             <div class="empleo-group">
               <label for="emp-nombre">¿Cuál es tu nombre? *</label>
               <input type="text" id="emp-nombre" placeholder="Nombre y apellido" required />
@@ -170,9 +175,6 @@
     const yr = document.getElementById('footer-year');
     if (yr) yr.textContent = new Date().getFullYear();
 
-    const TG_TOKEN   = '8676852850:AAFNEv3KsEVRUeiHMyUUBHffu1zX7QWzSZ0';
-    const TG_CHAT_ID = '6387850982';
-
     function mostrarFeedback(ok, texto) {
       const el = document.getElementById('empleo-feedback');
       el.textContent = texto;
@@ -183,16 +185,30 @@
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    // El envío pasa por /api/enviar (función de Cloudflare); el token del bot
+    // queda guardado como secreto en Cloudflare y nunca llega al navegador.
     document.getElementById('empleo-form').addEventListener('submit', async function (e) {
       e.preventDefault();
-      const nombre      = document.getElementById('emp-nombre').value.trim();
-      const experiencia = document.getElementById('emp-experiencia').value.trim();
-      const telefono    = document.getElementById('emp-telefono').value.trim();
-      const correo      = document.getElementById('emp-correo').value.trim();
-      const cv          = document.getElementById('emp-cv').files[0];
-      const btn         = document.getElementById('empleo-btn');
+      const form = this;
+      const btn  = document.getElementById('empleo-btn');
+      const fd   = new FormData();
+      fd.append('tipo', 'empleo');
+      fd.append('nombre', document.getElementById('emp-nombre').value.trim());
+      fd.append('experiencia', document.getElementById('emp-experiencia').value.trim());
+      fd.append('telefono', document.getElementById('emp-telefono').value.trim());
+      fd.append('correo', document.getElementById('emp-correo').value.trim());
+      fd.append('sitio_web', form.querySelector('[name="sitio_web"]').value);
+      const archivo = document.getElementById('emp-cv').files[0];
+      if (archivo) {
+        if (archivo.size > 10 * 1024 * 1024) {
+          mostrarFeedback(false, 'El archivo supera los 10 MB.');
+          return;
+        }
+        fd.append('archivo', archivo);
+      }
 
-      if (!nombre || !experiencia || !telefono) {
+      const requeridos = ['nombre', 'experiencia', 'telefono'];
+      if (requeridos.some(k => !fd.get(k))) {
         mostrarFeedback(false, 'Por favor completa los campos obligatorios: nombre, experiencia y teléfono.');
         return;
       }
@@ -200,41 +216,15 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
 
-      let msg = '&lt;Oruga37 empleo&gt;\n\n';
-      msg += '<b>NUEVA POSTULACION</b>\n\n';
-      msg += '<b>Nombre:</b> ' + nombre + '\n';
-      msg += '<b>Telefono:</b> ' + telefono + '\n';
-      if (correo) msg += '<b>Correo:</b> ' + correo + '\n';
-      msg += '\n<b>Experiencia:</b>\n' + experiencia;
-
       try {
-        const resText = await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'HTML' })
-        });
-        const dataText = await resText.json();
-
-        if (!dataText.ok) {
-          mostrarFeedback(false, 'Error al enviar: ' + (dataText.description || 'Intenta nuevamente.'));
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-brands fa-telegram"></i> Enviar postulación';
-          return;
+        const res  = await fetch('/api/enviar', { method: 'POST', body: fd });
+        const data = await res.json().catch(() => ({ ok: false }));
+        if (data.ok) {
+          mostrarFeedback(true, 'Postulación enviada correctamente. Te contactaremos pronto.');
+          form.reset();
+        } else {
+          mostrarFeedback(false, data.mensaje || 'No se pudo enviar. Intenta nuevamente.');
         }
-
-        if (cv) {
-          const formData = new FormData();
-          formData.append('chat_id', TG_CHAT_ID);
-          formData.append('document', cv);
-          formData.append('caption', 'CV de: ' + nombre);
-          await fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendDocument', {
-            method: 'POST',
-            body: formData
-          });
-        }
-
-        mostrarFeedback(true, 'Postulación enviada correctamente. Te contactaremos pronto.');
-        document.getElementById('empleo-form').reset();
       } catch (err) {
         mostrarFeedback(false, 'Error de conexión. Verifica tu internet e intenta nuevamente.');
       }
